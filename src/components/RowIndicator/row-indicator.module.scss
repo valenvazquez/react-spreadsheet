@@ -1,0 +1,10 @@
+.header {
+  text-align: center;
+  background-color: gainsboro;
+  width: 1.2rem;
+  border: 1px solid #999;
+
+  .selected {
+    background-color: cyan;
+  }
+}

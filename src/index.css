@@ -1,0 +1,20 @@
+html {
+  font-family: "Work Sans", Arial, Helvetica, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+body {
+  line-height: 1;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
