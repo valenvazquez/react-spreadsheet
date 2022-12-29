@@ -1,3 +1,10 @@
+import { Dispatch } from "react";
+import {
+  IActiveCell,
+  IAppAction,
+  setActiveCell,
+} from "../contexts/app-context";
+
 export const getRowLabel = (rowIndex: number) => {
   return rowIndex >= 0 ? `${rowIndex + 1}` : "";
 };
@@ -64,3 +71,37 @@ export const range = (end: number, start: number = 0) => {
 };
 
 export const peek = (arr: any[]): any => arr.slice(-1)[0];
+
+export type TDirection = "down" | "up" | "left" | "right";
+export const moveActiveCell = (
+  dispatch: Dispatch<IAppAction>,
+  activeCell: IActiveCell,
+  direction: TDirection
+) => {
+  const nextActiveCell = { ...activeCell };
+  switch (direction) {
+    case "down":
+      nextActiveCell.offsetTop = activeCell.offsetTop + activeCell.height;
+      nextActiveCell.row = activeCell.row + 1;
+      break;
+
+    case "up":
+      nextActiveCell.offsetTop = activeCell.offsetTop - activeCell.height;
+      nextActiveCell.row = activeCell.row - 1;
+      break;
+
+    case "right":
+      nextActiveCell.offsetLeft = activeCell.offsetLeft + activeCell.width;
+      nextActiveCell.col = activeCell.col + 1;
+      break;
+
+    case "left":
+      nextActiveCell.offsetLeft = activeCell.offsetLeft - activeCell.width;
+      nextActiveCell.col = activeCell.col - 1;
+      break;
+
+    default:
+      break;
+  }
+  dispatch(setActiveCell(nextActiveCell));
+};

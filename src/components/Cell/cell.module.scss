@@ -9,4 +9,8 @@
   padding: 0.1rem;
   font-size: 0.9rem;
   cursor: cell;
+
+  &:focus-visible {
+    outline: none;
+  }
 }

@@ -32,7 +32,12 @@ export const Cell = React.memo(
       }
     };
     return (
-      <td className={styles.cell} onClick={handleClick} ref={cellRef}>
+      <td
+        tabIndex={0}
+        className={styles.cell}
+        onClick={handleClick}
+        ref={cellRef}
+      >
         {cellValue}
       </td>
     );
