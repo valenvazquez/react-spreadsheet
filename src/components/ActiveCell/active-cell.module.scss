@@ -1,7 +1,9 @@
+@use "../../styles/colors.module.scss" as colors;
+
 .active-cell {
   position: absolute;
-  border: 1px solid green;
-  outline: 1px solid green;
+  border: 1px solid colors.$green;
+  outline: 1px solid colors.$green;
 
   .input {
     width: 100%;

@@ -1,13 +1,5 @@
-.header {
-  text-align: center;
-  background-color: #ccc;
-  font-size: 0.9rem;
-  overflow: hidden;
-  border: 1px solid #aaa;
-  width: 5rem;
-  // TODO: create header mixin
+@use "../../styles/utils.module.scss" as utils;
 
-  .selected {
-    background-color: cyan;
-  }
+.header {
+  @include utils.table-header();
 }

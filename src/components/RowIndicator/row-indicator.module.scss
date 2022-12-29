@@ -1,10 +1,6 @@
-.header {
-  text-align: center;
-  background-color: gainsboro;
-  width: 1.2rem;
-  border: 1px solid #999;
+@use "../../styles/colors.module.scss" as colors;
+@use "../../styles/utils.module.scss" as utils;
 
-  .selected {
-    background-color: cyan;
-  }
+.header {
+  @include utils.table-header(2rem);
 }
