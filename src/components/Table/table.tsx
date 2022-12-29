@@ -7,6 +7,7 @@ import styles from "./table.module.scss";
 import { useAppContext } from "../../contexts/app-context/app-context";
 import { Cell } from "../Cell";
 import { Parser } from "../../utils/parser";
+import { ActiveCell } from "../ActiveCell";
 
 export const Table = ({ size }: ITableProps) => {
   const columns = range(size.columns);
@@ -24,36 +25,48 @@ export const Table = ({ size }: ITableProps) => {
   const { row: activeRow, col: activeCol } = activeCell || {};
 
   return (
-    <table className={styles.table}>
-      <thead>
-        <tr>
-          <th className={styles["first-cell"]} />
-          {columns.map((colNumber) => (
-            <ColumnIndicator
-              key={colNumber}
-              col={colNumber}
-              selected={colNumber === activeCol}
-            />
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((rowNumber) => (
-          <tr key={rowNumber}>
-            <RowIndicator row={rowNumber} selected={rowNumber === activeRow} />
+    <>
+      {activeCell && (
+        <ActiveCell
+          maxCol={size.columns}
+          maxRow={size.rows}
+          key={`${activeCell.col}${activeCell.row}`}
+        />
+      )}
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th className={styles["first-cell"]} />
             {columns.map((colNumber) => (
-              <Cell
-                formulaParser={parser}
-                key={`${colNumber}${rowNumber}`}
+              <ColumnIndicator
+                key={colNumber}
                 col={colNumber}
-                row={rowNumber}
-                value={getCellValue(rowNumber, colNumber)}
-                dispatch={dispatch}
+                selected={colNumber === activeCol}
               />
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {rows.map((rowNumber) => (
+            <tr key={rowNumber}>
+              <RowIndicator
+                row={rowNumber}
+                selected={rowNumber === activeRow}
+              />
+              {columns.map((colNumber) => (
+                <Cell
+                  formulaParser={parser}
+                  key={`${colNumber}${rowNumber}`}
+                  col={colNumber}
+                  row={rowNumber}
+                  value={getCellValue(rowNumber, colNumber)}
+                  dispatch={dispatch}
+                />
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
 };

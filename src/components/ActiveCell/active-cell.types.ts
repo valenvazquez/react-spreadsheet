@@ -1,4 +1,4 @@
 export interface IActiveCellProps {
-  row: number;
-  col: number;
+  maxRow: number;
+  maxCol: number;
 }

@@ -76,26 +76,42 @@ export type TDirection = "down" | "up" | "left" | "right";
 export const moveActiveCell = (
   dispatch: Dispatch<IAppAction>,
   activeCell: IActiveCell,
-  direction: TDirection
+  direction: TDirection,
+  dimensions: {
+    rows: number;
+    columns: number;
+  }
 ) => {
   const nextActiveCell = { ...activeCell };
   switch (direction) {
     case "down":
+      if (activeCell.row === dimensions.rows) {
+        break;
+      }
       nextActiveCell.offsetTop = activeCell.offsetTop + activeCell.height;
       nextActiveCell.row = activeCell.row + 1;
       break;
 
     case "up":
+      if (activeCell.row === 0) {
+        break;
+      }
       nextActiveCell.offsetTop = activeCell.offsetTop - activeCell.height;
       nextActiveCell.row = activeCell.row - 1;
       break;
 
     case "right":
+      if (activeCell.col === dimensions.columns) {
+        break;
+      }
       nextActiveCell.offsetLeft = activeCell.offsetLeft + activeCell.width;
       nextActiveCell.col = activeCell.col + 1;
       break;
 
     case "left":
+      if (activeCell.col === 0) {
+        break;
+      }
       nextActiveCell.offsetLeft = activeCell.offsetLeft - activeCell.width;
       nextActiveCell.col = activeCell.col - 1;
       break;

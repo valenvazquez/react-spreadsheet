@@ -9,6 +9,7 @@
   padding: 0.1rem;
   font-size: 0.9rem;
   cursor: cell;
+  background-color: colors.$white;
 
   &:focus-visible {
     outline: none;

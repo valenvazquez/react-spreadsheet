@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { ICellProps } from "./cell.types";
 import styles from "./cell.module.scss";
 import { setActiveCell } from "../../contexts/app-context/actions/actions";
@@ -31,6 +31,14 @@ export const Cell = React.memo(
         );
       }
     };
+
+    // Initialize active cell in A1
+    useEffect(() => {
+      if (col === 0 && row === 0) {
+        handleClick();
+      }
+    }, []);
+
     return (
       <td
         tabIndex={0}
