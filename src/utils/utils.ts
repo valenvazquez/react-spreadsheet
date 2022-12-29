@@ -44,10 +44,8 @@ export const getColumnIndex = (label: string) => {
   return result;
 };
 
-export const isValidCellLabel = (label: string) => {
-  const validLabelRegex = new RegExp("\b[A-Za-z]+[0-9]+\b");
-  return validLabelRegex.test(label);
-};
+export const getCellLabel = (row: number, col: number) =>
+  `${getColumnLabel(col)}${getRowLabel(row)}`;
 
 /**
  * Create an array with all numbers between start and end, with a step of 1.

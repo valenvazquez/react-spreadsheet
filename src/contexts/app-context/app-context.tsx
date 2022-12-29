@@ -9,7 +9,6 @@ import {
 const initState: IAppContextState = {
   data: {},
   activeCell: null,
-  isTypingFormula: false,
 };
 
 export const AppContext = createContext<
@@ -23,23 +22,15 @@ const reducer: Reducer<IAppContextState, IAppAction> = (state, action) => {
         ...state,
         activeCell: action.payload,
       };
-    case EActions.UPDATE_CELL_DATA:
-      const { cell, ...payload } = action.payload;
+    case EActions.UPDATE_CELL_VALUE:
+      const { cell, value } = action.payload;
       return {
         ...state,
         data: {
           ...state.data,
-          [cell]: {
-            ...state.data[cell],
-            ...payload,
-          },
+          [cell]: value,
         },
       };
-    // case EActions.SET_IS_TYPING_FORMULA:
-    //   return {
-    //     ...state,
-    //     isTypingFormula: action.payload,
-    //   };
     default:
       throw new Error(`Unhandled action type in app-context`);
   }

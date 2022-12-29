@@ -1,10 +1,7 @@
 import { Buffer } from "./buffer";
 import { EErrors } from "../types/global-types";
-import {
-  SUPPORTED_OPERATORS,
-  CELL_REGEX,
-  SUPPORTED_OPERATORS_REGEX,
-} from "../constants";
+import { ERRORS, SUPPORTED_OPERATORS_REGEX } from "../constants";
+import { isValidCellLabel } from "./formula";
 
 export enum ETokens {
   Literal = "Literal",
@@ -42,18 +39,20 @@ export class Tokenizer {
     this.numberBuffer = new Buffer();
     this.lastCharType = null;
   }
-
-  private validateVariableToken(tokenValue: string) {
-    const isValidVariable = new RegExp(CELL_REGEX).test(tokenValue);
-    if (!isValidVariable) {
-      throw EErrors.NAME;
-    }
+  reset() {
+    this.result = [];
+    this.result = [];
+    this.cellBuffer = new Buffer();
+    this.numberBuffer = new Buffer();
+    this.lastCharType = null;
   }
 
   private addResultFromBuffer(buffer: Buffer, type: ETokens) {
     const value = buffer.join();
     if (type === ETokens.Variable) {
-      this.validateVariableToken(value);
+      if (!isValidCellLabel(value)) {
+        throw ERRORS.ERROR;
+      }
     }
     this.result.push(new Token(type, value));
     buffer.empty();

@@ -6,6 +6,7 @@ import {
   SUPPORTED_OPERATORS,
 } from "../constants";
 import { TOperator } from "../types/global-types";
+import { extractFormula, isFormula } from "./formula";
 import { add, substract } from "./operators";
 import { ETokens, Tokenizer } from "./tokenizer";
 import { peek } from "./utils";
@@ -37,6 +38,7 @@ export class Parser {
 
   parse(expression: string) {
     const tokens = this.tokenizer.tokenize(expression);
+    this.tokenizer.reset();
     const output: string[] = [];
     const stack: string[] = [];
     tokens.forEach((token) => {
@@ -45,7 +47,11 @@ export class Parser {
         return;
       }
       if (token.type === ETokens.Variable) {
-        const value = this.getVariable(token.value);
+        let value = this.getVariable(token.value);
+        if (isFormula(value)) {
+          const formula = extractFormula(value);
+          value = this.evaluate(formula).toString();
+        }
         output.push(value);
         return;
       }

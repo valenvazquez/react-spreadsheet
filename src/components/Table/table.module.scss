@@ -1,6 +1,12 @@
+@use "../../styles/utils.module.scss" as utils;
+
 .table {
   border-collapse: collapse;
   overflow: auto;
   table-layout: fixed;
   width: 100%;
+
+  .first-cell {
+    @include utils.table-header(2rem);
+  }
 }

@@ -9,15 +9,11 @@ export interface IActiveCell {
   offsetTop: number;
 }
 
-export interface ICellData {
-  value: string;
-  formula: string;
-}
+export type TData = Record<string, string>;
 
 export interface IAppContextState {
-  data: Record<string, ICellData>;
+  data: TData;
   activeCell: IActiveCell | null;
-  isTypingFormula: boolean;
 }
 
 export interface ICreateContextProps<T> {
