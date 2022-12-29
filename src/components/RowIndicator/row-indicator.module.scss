@@ -3,4 +3,6 @@
 
 .header {
   @include utils.table-header(2rem);
+  position: sticky;
+  left: 0;
 }

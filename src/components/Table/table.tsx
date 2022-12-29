@@ -27,7 +27,7 @@ export const Table = ({ size }: ITableProps) => {
     <table className={styles.table}>
       <thead>
         <tr>
-          <td className={styles["first-cell"]} />
+          <th className={styles["first-cell"]} />
           {columns.map((colNumber) => (
             <ColumnIndicator
               key={colNumber}

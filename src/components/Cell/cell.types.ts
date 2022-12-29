@@ -9,6 +9,5 @@ export interface ICellProps {
   value?: string;
   dispatch: Dispatch<IAppAction>;
   formulaParser: Parser;
-  // isFormulaActive: boolean;
   // onMouseDown?: MouseEventHandler<HTMLTableCellElement>;
 }
