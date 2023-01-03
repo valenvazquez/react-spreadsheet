@@ -6,7 +6,6 @@ import { ITableProps } from "./table.types";
 import styles from "./table.module.scss";
 import { useAppContext } from "../../contexts/app-context/app-context";
 import { Cell } from "../Cell";
-import { Parser } from "../../utils/parser";
 import { ActiveCell } from "../ActiveCell";
 
 export const Table = ({ size }: ITableProps) => {
@@ -16,7 +15,6 @@ export const Table = ({ size }: ITableProps) => {
     state: { data, activeCell },
     dispatch,
   } = useAppContext();
-  const parser = useMemo(() => new Parser(data), [data]);
 
   const getCellValue = useCallback(
     (row: number, col: number) => data[getCellLabel(row, col)],
@@ -55,7 +53,6 @@ export const Table = ({ size }: ITableProps) => {
               />
               {columns.map((colNumber) => (
                 <Cell
-                  formulaParser={parser}
                   key={`${colNumber}${rowNumber}`}
                   col={colNumber}
                   row={rowNumber}

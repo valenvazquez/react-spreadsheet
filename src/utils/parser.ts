@@ -7,7 +7,7 @@ import {
 } from "../constants";
 import { TOperator } from "../types/global-types";
 import { extractFormula, isFormula } from "./formula";
-import { add, substract } from "./operators";
+import { PubSub, TCallback } from "./pubsub";
 import { ETokens, Tokenizer } from "./tokenizer";
 import { peek } from "./utils";
 
@@ -15,12 +15,18 @@ const precedence = (operator: TOperator) => PRECEDENCE[operator];
 const associativity = (operator: TOperator) => ASSOCIATIVITY[operator];
 
 export class Parser {
-  result: string | null;
+  private result: string | null;
   private tokenizer: Tokenizer;
-  constructor(public variables: Record<string, string>) {
+  private EventObserver: PubSub;
+  private static instance: Parser;
+  private variables: Record<string, string>;
+
+  private constructor() {
     this.result = null;
-    this.variables = variables;
+    this.variables = {};
     this.tokenizer = new Tokenizer();
+    this.EventObserver = new PubSub();
+    Parser.instance = this;
   }
 
   private evaluateByOperator(
@@ -32,8 +38,19 @@ export class Parser {
     return func(param1, param2);
   }
 
+  static getInstance() {
+    if (!Parser.instance) {
+      Parser.instance = new Parser();
+    }
+    return Parser.instance;
+  }
+
   getVariable(name: string) {
     return this.variables[name] || "";
+  }
+
+  setVariable(name: string, value: string) {
+    this.variables[name] = value;
   }
 
   parse(expression: string) {
@@ -95,5 +112,13 @@ export class Parser {
     } else {
       return stack[0];
     }
+  }
+
+  on(event: string, callback: TCallback) {
+    return this.EventObserver.on(event, callback);
+  }
+
+  fire(event: string) {
+    this.EventObserver.fire(event);
   }
 }

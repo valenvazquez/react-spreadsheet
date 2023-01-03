@@ -17,8 +17,8 @@ export const shouldReplaceReference = (formula: string) => {
   return new RegExp(`${CELL_REGEX}$`).test(formula.trimEnd());
 };
 
-export const extractFormulaReferenes = (formula: string) => {
-  return formula.match(new RegExp(CELL_REGEX, "g"));
+export const extractFormulaReferences = (formula: string) => {
+  return formula.match(new RegExp(CELL_REGEX, "g")) ?? [];
 };
 
 export const isValidCellLabel = (label: string) => {

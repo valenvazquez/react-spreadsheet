@@ -17,6 +17,7 @@ import {
 } from "../../utils/utils";
 import { IActiveCellProps } from "./active-cell.types";
 import { IActiveCell } from "../../contexts/app-context";
+import { Parser } from "../../utils/parser";
 
 export const ActiveCell = ({ maxCol, maxRow }: IActiveCellProps) => {
   const {
@@ -38,6 +39,9 @@ export const ActiveCell = ({ maxCol, maxRow }: IActiveCellProps) => {
 
   const handleInputBlur = () => {
     dispatch(updateCellValue(cellLabel, inputValue));
+    const formulaParser = Parser.getInstance();
+    formulaParser.setVariable(cellLabel, inputValue);
+    formulaParser.fire(`${cellLabel}:changed`);
   };
 
   const handleKeyDown = useCallback(
@@ -84,6 +88,7 @@ export const ActiveCell = ({ maxCol, maxRow }: IActiveCellProps) => {
   );
 
   useEffect(() => {
+    inputRef.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);

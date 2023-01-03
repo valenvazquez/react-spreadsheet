@@ -8,6 +8,4 @@ export interface ICellProps {
   col: number;
   value?: string;
   dispatch: Dispatch<IAppAction>;
-  formulaParser: Parser;
-  // onMouseDown?: MouseEventHandler<HTMLTableCellElement>;
 }
