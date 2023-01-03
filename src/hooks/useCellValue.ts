@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { extractFormulaReferences, isFormula } from "../utils/formula";
 import { Parser } from "../utils/parser";
 
 export const useCellValue = (name: string, expression?: string) => {
   const formulaParser = Parser.getInstance();
   const [value, setValue] = useState<string>();
-  const previousReferences = useRef<string[]>([]);
 
   const cellReferences = useMemo(
     () => (isFormula(expression) ? extractFormulaReferences(expression) : []),
