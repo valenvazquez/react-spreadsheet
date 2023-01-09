@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { IColumnIndicatorProps } from "./column-indicator.types";
 import styles from "./column-indicator.module.scss";
 import classNames from "classnames";
-import { getColumnLabel } from "../../utils/utils";
+import { getColumnLabel } from "../../utils";
 
 export const ColumnIndicator = ({ col, selected }: IColumnIndicatorProps) => {
   const classes = classNames(styles.header, selected && styles.selected);

@@ -8,20 +8,20 @@ import React, {
 } from "react";
 import styles from "./active-cell.module.scss";
 import { useAppContext } from "../../contexts/app-context/app-context";
-import { updateCellValue } from "../../contexts/app-context/actions/actions";
 import {
   getColumnLabel,
   getRowLabel,
   moveActiveCell,
   TDirection,
-} from "../../utils/utils";
+  Parser,
+} from "../../utils";
 import { IActiveCellProps } from "./active-cell.types";
 import { IActiveCell } from "../../contexts/app-context";
-import { Parser } from "../../utils/parser";
+import { EKeys } from "../../types/global-types";
 
 export const ActiveCell = ({ maxCol, maxRow }: IActiveCellProps) => {
   const {
-    state: { activeCell, data },
+    state: { activeCell },
     dispatch,
   } = useAppContext();
   const { height, offsetLeft, offsetTop, width, col, row } =
@@ -30,16 +30,17 @@ export const ActiveCell = ({ maxCol, maxRow }: IActiveCellProps) => {
     () => `${getColumnLabel(col)}${getRowLabel(row)}`,
     [col, row]
   );
+  const formulaParser = Parser.getInstance();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [inputValue, setInputValue] = useState<string>(data[cellLabel] || "");
+  const [inputValue, setInputValue] = useState<string>(
+    formulaParser.getVariable(cellLabel) || ""
+  );
   const handleInputChange = (ev: ChangeEvent<HTMLInputElement>) => {
     setInputValue(ev.target.value);
   };
 
   const handleInputBlur = () => {
-    dispatch(updateCellValue(cellLabel, inputValue));
-    const formulaParser = Parser.getInstance();
     formulaParser.setVariable(cellLabel, inputValue);
     formulaParser.fire(`${cellLabel}:changed`);
   };
@@ -48,7 +49,7 @@ export const ActiveCell = ({ maxCol, maxRow }: IActiveCellProps) => {
     (ev: KeyboardEvent) => {
       const key = ev.key;
       const isInputFocused = document.activeElement === inputRef.current;
-      const keyDirection: Record<string, TDirection> = {
+      const keyDirection: Record<EKeys, TDirection> = {
         Enter: "down",
         ArrowDown: "down",
         ArrowUp: "up",
@@ -56,30 +57,32 @@ export const ActiveCell = ({ maxCol, maxRow }: IActiveCellProps) => {
         ArrowRight: "right",
       };
 
-      if (key in keyDirection) {
-        ev.preventDefault();
-        if (key === "Enter") {
-          if (isInputFocused) {
+      if (key in EKeys) {
+        if (isInputFocused) {
+          if (key === EKeys.Enter) {
             inputRef.current?.blur();
             moveActiveCell(dispatch, activeCell as IActiveCell, "down", {
               rows: maxRow,
               columns: maxCol,
             });
-          } else {
-            inputRef.current?.focus();
           }
           return;
         }
-        if (isInputFocused) {
+        ev.preventDefault();
+        if (key === "Enter") {
+          inputRef.current?.focus();
           return;
         }
-        moveActiveCell(dispatch, activeCell as IActiveCell, keyDirection[key], {
-          rows: maxRow,
-          columns: maxCol,
-        });
-        return;
-      }
-      if (!isInputFocused) {
+        moveActiveCell(
+          dispatch,
+          activeCell as IActiveCell,
+          keyDirection[key as EKeys],
+          {
+            rows: maxRow,
+            columns: maxCol,
+          }
+        );
+      } else if (!isInputFocused) {
         inputRef.current?.focus();
         inputRef.current?.select();
       }

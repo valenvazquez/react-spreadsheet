@@ -1,5 +1,5 @@
 import { TOperator } from "../types/global-types";
-import { add, substract } from "../utils/operators";
+import { add, substract } from "../utils";
 
 export const CELL_REGEX = "\\b[A-Z]+[0-9]+\\b";
 export const SUPPORTED_OPERATORS = ["+", "-"] as const;
@@ -27,15 +27,25 @@ export const PRECEDENCE: TOperators<number> = {
   "-": 2,
 };
 
-type TError = {
+export type TError = {
   title: string;
   description?: string;
 };
 export const ERRORS: Record<string, TError> = {
   ERROR: {
     title: "#ERROR!",
+    description: "Formula parse error.",
   },
   NAME: {
     title: "#NAME?",
+    description: "Unknown range name.",
+  },
+  VALUE: {
+    title: "#VALUE!",
+    description: "Numeric value expected.",
+  },
+  REF: {
+    title: "#REF!",
+    description: "Circular dependency detected",
   },
 };

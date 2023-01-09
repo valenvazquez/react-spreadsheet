@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from "react";
-import { getCellLabel, range } from "../../utils/utils";
+import React from "react";
+import { range } from "../../utils";
 import { ColumnIndicator } from "../ColumnIndicator";
 import { RowIndicator } from "../RowIndicator";
 import { ITableProps } from "./table.types";
@@ -12,14 +12,10 @@ export const Table = ({ size }: ITableProps) => {
   const columns = range(size.columns);
   const rows = range(size.rows);
   const {
-    state: { data, activeCell },
+    state: { activeCell },
     dispatch,
   } = useAppContext();
 
-  const getCellValue = useCallback(
-    (row: number, col: number) => data[getCellLabel(row, col)],
-    [data]
-  );
   const { row: activeRow, col: activeCol } = activeCell || {};
 
   return (
@@ -56,7 +52,6 @@ export const Table = ({ size }: ITableProps) => {
                   key={`${colNumber}${rowNumber}`}
                   col={colNumber}
                   row={rowNumber}
-                  value={getCellValue(rowNumber, colNumber)}
                   dispatch={dispatch}
                 />
               ))}

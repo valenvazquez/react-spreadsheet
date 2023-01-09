@@ -9,10 +9,7 @@ export interface IActiveCell {
   offsetTop: number;
 }
 
-export type TData = Record<string, string>;
-
 export interface IAppContextState {
-  data: TData;
   activeCell: IActiveCell | null;
 }
 

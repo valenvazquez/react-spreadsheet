@@ -70,6 +70,10 @@ export const range = (end: number, start: number = 0) => {
   return Array.from({ length }, (_, i) => start + i);
 };
 
+export const hasCommonElements = (arr1: any, arr2: any): boolean => {
+  return arr1.some((elem: any) => arr2.includes(elem));
+};
+
 export const peek = (arr: any[]): any => arr.slice(-1)[0];
 
 export type TDirection = "down" | "up" | "left" | "right";

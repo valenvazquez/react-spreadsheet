@@ -6,7 +6,8 @@ import {
   SUPPORTED_OPERATORS,
 } from "../constants";
 import { TOperator } from "../types/global-types";
-import { extractFormula, isFormula } from "./formula";
+import { extractFormula, extractFormulaReferences, isFormula } from "./formula";
+import { Graph } from "./graph";
 import { PubSub, TCallback } from "./pubsub";
 import { ETokens, Tokenizer } from "./tokenizer";
 import { peek } from "./utils";
@@ -53,6 +54,31 @@ export class Parser {
     this.variables[name] = value;
   }
 
+  private getVariableDependencies(name: string) {
+    const expression = this.getVariable(name);
+    return isFormula(expression) ? extractFormulaReferences(expression) : [];
+  }
+
+  private createGraph(name: string, graph: Graph = new Graph()) {
+    const edges = this.getVariableDependencies(name);
+    if (!graph.adjMatrix[name]) {
+      graph.addVertex(name);
+      graph.addEdges(name, ...edges);
+    }
+    edges.forEach((edge) => {
+      if (!graph.adjMatrix[edge]) {
+        this.createGraph(edge, graph);
+      }
+    });
+    return graph;
+  }
+
+  private checkCircularDependencies(name: string) {
+    if (this.createGraph(name).detectCycle()) {
+      throw ERRORS.REF;
+    }
+  }
+
   parse(expression: string) {
     const tokens = this.tokenizer.tokenize(expression);
     this.tokenizer.reset();
@@ -64,6 +90,7 @@ export class Parser {
         return;
       }
       if (token.type === ETokens.Variable) {
+        this.checkCircularDependencies(token.value);
         let value = this.getVariable(token.value);
         if (isFormula(value)) {
           const formula = extractFormula(value);
@@ -94,7 +121,7 @@ export class Parser {
 
   evaluate(expression: string) {
     const stack: number[] = [];
-    const rpn = this.parse(expression);
+    const rpn = this.parse(expression.toUpperCase());
     rpn.split(" ").forEach((elem) => {
       const numericValue = Number(elem);
       if (!isNaN(numericValue) && isFinite(numericValue)) {
@@ -105,6 +132,8 @@ export class Parser {
         const a = stack.pop() || 0;
         const b = stack.pop() || 0;
         stack.push(this.evaluateByOperator(elem as TOperator, b, a));
+      } else {
+        throw ERRORS.VALUE;
       }
     });
     if (stack.length > 1) {

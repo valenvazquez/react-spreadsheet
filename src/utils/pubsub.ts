@@ -12,7 +12,7 @@ export class PubSub {
     }
     this.events[event].push(callback);
     return () => {
-      this.events[event].filter((cb) => cb === callback);
+      this.events[event] = this.events[event].filter((cb) => cb !== callback);
     };
   }
 
@@ -20,6 +20,6 @@ export class PubSub {
     if (!this.events[event]) {
       return;
     }
-    this.events[event].forEach((eventCb) => eventCb());
+    this.events[event].forEach((cb) => cb());
   }
 }

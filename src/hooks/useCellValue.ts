@@ -1,31 +1,57 @@
-import { useEffect, useMemo, useState } from "react";
-import { extractFormulaReferences, isFormula } from "../utils/formula";
-import { Parser } from "../utils/parser";
+import { useEffect, useState } from "react";
+import {
+  extractFormula,
+  extractFormulaReferences,
+  isFormula,
+  Parser,
+  getCellLabel,
+} from "../utils";
 
-export const useCellValue = (name: string, expression?: string) => {
+export const useCellValue = (row: number, col: number) => {
   const formulaParser = Parser.getInstance();
   const [value, setValue] = useState<string>();
 
-  const cellReferences = useMemo(
-    () => (isFormula(expression) ? extractFormulaReferences(expression) : []),
-    [expression]
-  );
+  const cellLabel = getCellLabel(row, col);
+  const expression = formulaParser.getVariable(cellLabel);
+
+  const updateValue = () => {
+    try {
+      const expression = formulaParser.getVariable(cellLabel);
+      if (isFormula(expression)) {
+        const parsedValue = formulaParser
+          .evaluate(extractFormula(expression))
+          .toString();
+        setValue(parsedValue);
+      } else {
+        setValue(expression);
+      }
+    } catch (error: any) {
+      setValue(error.title);
+    }
+  };
 
   useEffect(() => {
+    const unsuscribe = formulaParser.on(`${cellLabel}:changed`, updateValue);
+    return () => unsuscribe();
+  }, []);
+
+  useEffect(() => {
+    const cellReferences = isFormula(expression)
+      ? extractFormulaReferences(expression)
+      : [];
+    if (cellReferences.includes(cellLabel)) {
+      return;
+    }
     const unsuscribers = cellReferences.map((ref) =>
       formulaParser.on(`${ref}:changed`, () => {
-        setValue(formulaParser.evaluate(expression as string).toString());
-        formulaParser.fire(`${name}:changed`);
+        formulaParser.fire(`${cellLabel}:changed`);
       })
     );
-    setValue(
-      isFormula(expression)
-        ? formulaParser.evaluate(expression).toString()
-        : expression
-    );
 
-    return () => unsuscribers.forEach((unsuscribe) => unsuscribe());
-  }, [expression]);
+    return () => {
+      unsuscribers.forEach((unsuscribe) => unsuscribe());
+    };
+  }, [value]);
 
   return value;
 };

@@ -3,11 +3,10 @@ import { ICellProps } from "./cell.types";
 import styles from "./cell.module.scss";
 import { setActiveCell } from "../../contexts/app-context/actions/actions";
 import { useCellValue } from "../../hooks/useCellValue";
-import { getCellLabel } from "../../utils/utils";
 
-export const Cell = React.memo(({ row, col, value, dispatch }: ICellProps) => {
+export const Cell = React.memo(({ row, col, dispatch }: ICellProps) => {
   const cellRef = useRef<HTMLTableCellElement | null>(null);
-  const cellValue = useCellValue(getCellLabel(row, col), value);
+  const cellValue = useCellValue(row, col);
 
   const handleClick = () => {
     if (cellRef.current) {

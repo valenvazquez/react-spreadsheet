@@ -1,5 +1,4 @@
 import { Buffer } from "./buffer";
-import { EErrors } from "../types/global-types";
 import { ERRORS, SUPPORTED_OPERATORS_REGEX } from "../constants";
 import { isValidCellLabel } from "./formula";
 
@@ -41,7 +40,6 @@ export class Tokenizer {
   }
   reset() {
     this.result = [];
-    this.result = [];
     this.cellBuffer = new Buffer();
     this.numberBuffer = new Buffer();
     this.lastCharType = null;
@@ -75,7 +73,7 @@ export class Tokenizer {
 
   private addLetter(ch: string) {
     if (this.lastCharType === CharTypes.Digit) {
-      throw EErrors.NAME;
+      throw ERRORS.NAME;
     }
     this.cellBuffer.add(ch);
     this.lastCharType = CharTypes.Letter;

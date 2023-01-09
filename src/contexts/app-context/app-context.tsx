@@ -7,7 +7,6 @@ import {
 } from "./app-conext.types";
 
 const initState: IAppContextState = {
-  data: {},
   activeCell: null,
 };
 
@@ -21,15 +20,6 @@ const reducer: Reducer<IAppContextState, IAppAction> = (state, action) => {
       return {
         ...state,
         activeCell: action.payload,
-      };
-    case EActions.UPDATE_CELL_VALUE:
-      const { cell, value } = action.payload;
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [cell]: value,
-        },
       };
     default:
       throw new Error(`Unhandled action type in app-context`);
