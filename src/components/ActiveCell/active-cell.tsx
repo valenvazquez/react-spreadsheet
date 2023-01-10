@@ -106,7 +106,11 @@ export const ActiveCell = ({ maxCol, maxRow }: IActiveCellProps) => {
         height,
       }}
     >
+      <label className={styles["screen-reader-text"]} htmlFor="cell-input">
+        {cellLabel} value
+      </label>
       <input
+        id="cell-input"
         ref={inputRef}
         className={styles.input}
         type="text"
