@@ -69,7 +69,7 @@ export const ActiveCell = ({ maxCol, maxRow }: IActiveCellProps) => {
           return;
         }
         ev.preventDefault();
-        if (key === "Enter") {
+        if (key === EKeys.Enter) {
           inputRef.current?.focus();
           return;
         }

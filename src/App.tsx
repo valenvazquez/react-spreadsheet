@@ -2,7 +2,7 @@ import React from "react";
 import { Table } from "./components/Table";
 
 const App = () => {
-  return <Table size={{ columns: 5, rows: 10 }} />;
+  return <Table size={{ columns: 50, rows: 200 }} />;
 };
 
 export default App;
